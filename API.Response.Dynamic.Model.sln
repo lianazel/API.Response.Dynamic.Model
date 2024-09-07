@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Response.Dynamic.Model", "API.Response.Dynamic.Model\API.Response.Dynamic.Model.csproj", "{78ED4BB0-D103-497D-B6FB-D5777000EC19}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{F6F5EB01-25B5-4BEB-A74F-9B45C56DEF37}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Response.Dynamic.Model.Infrastructures", "API.Response.Dynamic.Model.Infrastructures\API.Response.Dynamic.Model.Infrastructures.csproj", "{21D02DBE-F051-4322-870B-418829908CC4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Response.Dynamic.Model.Domain", "API.Response.Dynamic.Model.Domain\API.Response.Dynamic.Model.Domain.csproj", "{1166348C-A283-4B27-BBA6-452FD055666C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Response.Dynamic.Model.Framework", "API.Response.Dynamic.Model.Framework\API.Response.Dynamic.Model.Framework.csproj", "{99E3BD62-1A91-422C-89C2-B0F0111E60E4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API.Response.Dynamic.Model.DataMigration", "API.Response.Dynamic.Model.DataMigration\API.Response.Dynamic.Model.DataMigration.csproj", "{8C7AC83C-2F97-4EE3-9247-A75F9E5C026A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{78ED4BB0-D103-497D-B6FB-D5777000EC19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78ED4BB0-D103-497D-B6FB-D5777000EC19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78ED4BB0-D103-497D-B6FB-D5777000EC19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78ED4BB0-D103-497D-B6FB-D5777000EC19}.Release|Any CPU.Build.0 = Release|Any CPU
+		{21D02DBE-F051-4322-870B-418829908CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21D02DBE-F051-4322-870B-418829908CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21D02DBE-F051-4322-870B-418829908CC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21D02DBE-F051-4322-870B-418829908CC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1166348C-A283-4B27-BBA6-452FD055666C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1166348C-A283-4B27-BBA6-452FD055666C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1166348C-A283-4B27-BBA6-452FD055666C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1166348C-A283-4B27-BBA6-452FD055666C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99E3BD62-1A91-422C-89C2-B0F0111E60E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99E3BD62-1A91-422C-89C2-B0F0111E60E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99E3BD62-1A91-422C-89C2-B0F0111E60E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99E3BD62-1A91-422C-89C2-B0F0111E60E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C7AC83C-2F97-4EE3-9247-A75F9E5C026A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C7AC83C-2F97-4EE3-9247-A75F9E5C026A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C7AC83C-2F97-4EE3-9247-A75F9E5C026A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C7AC83C-2F97-4EE3-9247-A75F9E5C026A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{21D02DBE-F051-4322-870B-418829908CC4} = {F6F5EB01-25B5-4BEB-A74F-9B45C56DEF37}
+		{1166348C-A283-4B27-BBA6-452FD055666C} = {F6F5EB01-25B5-4BEB-A74F-9B45C56DEF37}
+		{99E3BD62-1A91-422C-89C2-B0F0111E60E4} = {F6F5EB01-25B5-4BEB-A74F-9B45C56DEF37}
+		{8C7AC83C-2F97-4EE3-9247-A75F9E5C026A} = {F6F5EB01-25B5-4BEB-A74F-9B45C56DEF37}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5A93F503-9492-4EB3-962F-32D3DBF2AFDE}
+	EndGlobalSection
+EndGlobal

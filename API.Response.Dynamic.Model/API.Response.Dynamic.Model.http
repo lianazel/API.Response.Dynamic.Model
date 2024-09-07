@@ -1,0 +1,5 @@
+﻿// @API.Response.Dynamic.Model_HostAddress = https://localhost:7282
+
+// POST {{API.Response.Dynamic.Model_HostAddress}}/api/v1/AddRequestModel?_Profil=string&_Pwrd=string&_IPadresse=string&_SqlRequest=string&_ModelName=string&_ClauseWhere=False&_JobSummary=False&_DynamicModel=False
+
+###
