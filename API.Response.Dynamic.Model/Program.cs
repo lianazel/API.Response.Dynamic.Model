@@ -10,6 +10,10 @@ using API.Response.Dynamic.Model.wwwroot.Swagger;
 using System.Configuration;
 using IoC.Features;
 using System.Reflection;
+using System.Net;
+using Microsoft.OpenApi.Models;
+using API.Response.Dynamic.Model.SecurityMethods;
+using Microsoft.AspNetCore.Identity;
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -28,21 +32,21 @@ var builder = WebApplication.CreateBuilder(args);
 // ==> https://stackoverflow.com/questions/68980778/config-connection-string-in-net-core-6
 builder.Services.AddDbContext<DataContext>(options =>
 {
-// > Pour la prod <
-//options.UseSqlServer(builder.Configuration.GetConnectionString("PROD_DEV"));
+    // > Pour la prod <
+    //options.UseSqlServer(builder.Configuration.GetConnectionString("PROD_DEV"));
 
-options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings")["PROD_BDD"],
-    sqlServerOptionsAction: SqlOptions =>
-    {
-        // > Implémentation résulient EF Core => SQL Connection <
-        //   ( Reconnection à la base de données en cas d'échec )
-        SqlOptions.EnableRetryOnFailure(
-            maxRetryCount: 2,
-            maxRetryDelay: TimeSpan.FromSeconds(10),
-            errorNumbersToAdd: null);
+    options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings")["PROD_BDD"],
+        sqlServerOptionsAction: SqlOptions =>
+        {
+            // > Implémentation résulient EF Core => SQL Connection <
+            //   ( Reconnection à la base de données en cas d'échec )
+            SqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 2,
+                maxRetryDelay: TimeSpan.FromSeconds(10),
+                errorNumbersToAdd: null);
+        });
+
     });
-
-});
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
@@ -94,9 +98,9 @@ builder.Services
 
         // > Définit une version par défaut  <
         options.DefaultApiVersion = new ApiVersion(3.0);
-    } )
-    
-    
+    })
+
+
     .AddApiExplorer(options =>
     {
         // Add the versioned API explorer, which also adds IApiVersionDescriptionProvider service
@@ -118,7 +122,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-// > Récûpération de la documentation installée au niveau du contrôleur <
+// > Récupération de la documentation installée au niveau du contrôleur <
 builder.Services.AddSwaggerGen(options =>
 {
     // > Ajouter un filtre d'opération personnalisé qui définit les valeurs par défaut <
@@ -127,12 +131,71 @@ builder.Services.AddSwaggerGen(options =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     options.IncludeXmlComments(xmlPath);
+
+    // > Ajout Authentification JWT 1/2 <
+    options.AddSecurityDefinition(" Bearer ", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    {
+        Description = "En-tête d’autorisation JWT utilisant le schéma Bearer.",
+        Name = " Authorization ",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey
+    });
+
+    // > Ajout Authentification JWT 2/2 <
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = " Bearer "
+                },
+                Scheme = " oauth2 " , Name = " Bearer " ,
+
+                In = ParameterLocation.Header,
+            },
+
+            new List<string>() 
+            
+        }
+    });
+
 });
-
-
 // - - - - - - - - - - - - - - - - - - - - 
 // Configuration du VERSIONNING de l'API ( FIN ) 
 // - - - - - - - - - - - - - - - - - - - - 
+
+
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// ###      *** JWT .Net 8 ***        #### 
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+SecurityMethods.AddCustomAuthentication(builder);
+
+
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// ###               *** JWT .Net 8 ***              ###
+// ###    > Configurations options mot de passe      ###
+// ###    > Association du contexte                  ###
+// =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+builder.Services.AddDefaultIdentity<IdentityUser>(options =>
+{
+    // > On demande à se ce que le mot de passe...
+    //   ...contienne des chiffres <
+    options.Password.RequireDigit = true;
+
+    // > On demande à se ce que le mot de passe...
+    //   ...contienne des majuscules <
+    options.Password.RequireUppercase = true;
+
+    // > On demande à se ce que le mot de passe...
+    //   ...contienne minimum 12 caractères <
+    options.Password.RequiredLength = 12;
+
+//  Association avec notre Context pour effectuer l'authentification 
+}).AddEntityFrameworkStores<DataContext>();
 
 
 // > Construction de l'objet builder <
@@ -163,14 +226,27 @@ if (app.Environment.IsDevelopment())
             options.SwaggerEndpoint(url, name);
         }
     });
-    
+
 }
 // - - - - - - - - - - - - - - - - - - - - 
 //> Configiration du Swagger pour le dévéloppement <
 //   [ Configuration du VERSIONNING de l'API ( Fin ) ]
 // - - - - - - - - - - - - - - - - - - - - 
 
+// - - - - - - - - - - - - - - -
+// > Création automatique de la base de données <
+// - - - - - - - - - - - - - - -
+using (var scope = app.Services.CreateScope())
+{
 
+    // -- Chargement des tables définies dans le contexte - 
+    var dbContext = scope.ServiceProvider.GetService<DataContext>();  
+
+    // -- Création des tables --
+    dbContext.Database.EnsureCreated();
+
+}
+ 
 
 
 // > Crypatage des données échangées entre le l'API et le client <

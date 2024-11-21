@@ -4,9 +4,12 @@ using API.Response.Dynamic.Model.Infrastructures.Data.TypeConfiguration;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 
+// > Pour "IdentityDbContext" 
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+
 namespace API.Response.Dynamic.Model.Infrastructures.Data
 {
-    public class DataContext : DbContext, IUnitOfWork
+    public class DataContext : IdentityDbContext, IUnitOfWork
     {
         // > Constructeur (1) <
         public DataContext() : base()

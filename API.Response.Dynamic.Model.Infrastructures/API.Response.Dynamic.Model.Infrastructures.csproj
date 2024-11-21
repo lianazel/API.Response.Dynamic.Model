@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -23,6 +24,12 @@
   <ItemGroup>
     <ProjectReference Include="..\API.Response.Dynamic.Model.Domain\API.Response.Dynamic.Model.Domain.csproj" />
     <ProjectReference Include="..\API.Response.Dynamic.Model.Framework\API.Response.Dynamic.Model.Framework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="API.Response.Dynamic.Model.DataMigration">
+      <HintPath>..\..\..\..\..\Windows\Microsoft.NET\assembly\GAC_MSIL\API.Response.Dynamic.Model.DataMigration\v4.0_1.0.0.0__c19ecf9e96de71e1\API.Response.Dynamic.Model.DataMigration.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

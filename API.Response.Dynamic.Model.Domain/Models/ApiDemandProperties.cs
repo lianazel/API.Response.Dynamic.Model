@@ -21,7 +21,7 @@ namespace API.Response.Dynamic.Model.Domain.Models
         public string PropertyName { get; set; }
 
         // > Type de la propriété  <
-        public string PropertyType { get; set; }
+        public string PropertyType { get; set; } 
 
     }
 }
