@@ -8,6 +8,7 @@ using API.Response.Dynamic.Model.Infrastructures.Connectors;
 using API.Response.Dynamic.Model.Domain.Models;
 using System.Text;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Identity;
 
 
 // - - - - - - - - - - - - - - -
@@ -36,6 +37,21 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
         // > On déclare un membre pour récupérer l'envireonnement d'exécution <
         //   ( ici on en aura pas besoin, mais c'est pour l'exemple )
         private readonly IWebHostEnvironment _webHostEnvironment = null;
+
+        // - - - - - - - - - - - -
+        // ### Authentication Debut ###
+        // - - - - - - - - - - - -
+        // > Déclare un "UserManager" <
+        private UserManager<IdentityUser> userManager = null;
+
+        // > Déclare valriable pour extraire la clé de "Jwt:Key" <
+        private string ElemKey;
+
+        // > Tableau de strings utilisé pour la construction...
+        //   ... de l'objet "host"  
+        // - - - - - - - - - - - -
+        // ### Authentication Fin ###
+        // - - - - - - - - - - - -
 
         #endregion
 
