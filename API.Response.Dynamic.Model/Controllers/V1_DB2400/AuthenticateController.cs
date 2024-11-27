@@ -51,13 +51,79 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
         #region methods
 
+        [Route("Register")]
+        [HttpPost]
+        public async Task<IActionResult> Register([FromBody] AuthenticateUserDto userDto)
+        {
+
+            // > Par défaut, pessimiste <
+            IActionResult result = this.BadRequest();
+
+            // ---------------------------
+            // ## DEBUT - Construit l'objet "user" ##
+            // ---------------------------
+            var user = new IdentityUser(userDto.Login);
+            user.Email = userDto.Login;
+            user.UserName  = userDto.Name;
+            // ---------------------------
+            // ## DEBUT - Construit l'objet "user" ##
+            // ---------------------------
+
+            // > Tentative d'écriture en Base du nouveau User <
+            var success = await this._userManager.CreateAsync(user, userDto.Password);
+
+            if (success.Succeeded)
+            {
+                try
+                {
+                    // > On récupère le Token calculé par la méthode "GenerateJwtToken" <
+                    userDto.Token = this.GenerateJwtToken(user);
+                    // > On renvoie le Dto avec le Token calculé <
+                    result = this.Ok(userDto);
+                }
+
+                // > Le Anaomalie détectée à la génératioon du Token  <
+                catch (Exception ex)
+                {
+                    // > Récupération du message d'erreur <
+                    userDto.ErrorMsge = ex.Message;
+
+                    // > On renvoie le Dto avec le Message d'erreur <
+                    result = this.BadRequest(userDto);
+                }
+
+                finally
+                { }
+            }
+
+            // > Quelque chose s'est mal passé <
+            //   - Mot de passe incorrect ( ne respecte PAS les règles prédéfinies ),
+            //                  ou
+            //   - Un utilisateur avec ce login existe déjà...
+            else
+            { 
+            
+                StringBuilder sb = new StringBuilder(); 
+
+                foreach ( char item in success.Errors.ToString())
+                {
+                    sb.Append(item);
+
+                }
+
+                userDto.ErrorMsge = sb.ToString();  
+                result = this.BadRequest(userDto);
+            }  
+
+            return result;      
+        }
+
         [Route("Login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] AuthenticateUserDto DtoUser)
         {
             // > Par défaut, pessimiste <
             IActionResult result = this.BadRequest();
-
 
             // > On va verifier le profil via l'adresse mail et le mot de passe <
             // > L'idée, c'est de pouvoir s'authentifier avec le login qui...
