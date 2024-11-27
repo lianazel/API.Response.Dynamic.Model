@@ -9,7 +9,6 @@ I implemented versioning in the API: It works for DB2/400, I am now adapting it 
 
 The core remains unchanged however: it analyzes the result of the query.
 
-Due to lack of time, I haven't had much for some time.
 
 The possibilities offered by dynamic construction are numerous.
 
