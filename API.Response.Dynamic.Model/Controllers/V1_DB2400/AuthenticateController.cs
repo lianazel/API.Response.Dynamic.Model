@@ -1,7 +1,5 @@
-﻿
-using API.Response.Dynamic.Model.Applications.DTOs;
+﻿using API.Response.Dynamic.Model.Applications.DTOs;
 using Asp.Versioning;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
@@ -35,8 +33,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
         #endregion
 
         #region Constructor
-        // > Constructeur <
-        // Remarque : On recupère "userManager" par injection de dépendance <
+        // > Constructeur (On recupère "userManager" par injection de dépendance) <
         public AuthenticateController(UserManager<IdentityUser> userManager)
         {
             // > Chargement du Paramètre <
