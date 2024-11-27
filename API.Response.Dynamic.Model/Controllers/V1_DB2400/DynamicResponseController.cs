@@ -9,6 +9,8 @@ using API.Response.Dynamic.Model.Domain.Models;
 using System.Text;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 // - - - - - - - - - - - - - - -
@@ -23,6 +25,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
     [ApiController]
     [ApiVersion("1.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
+    [Authorize(AuthenticationSchemes =JwtBearerDefaults.AuthenticationScheme)]
 
     public class DynamicResponseController : ControllerBase
 

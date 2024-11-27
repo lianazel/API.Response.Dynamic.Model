@@ -194,6 +194,9 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
     //   ...contienne minimum 12 caractères <
     options.Password.RequiredLength = 12;
 
+    // > Demande ici la saisie d'une adresse Mail <
+    options.SignIn.RequireConfirmedEmail = true;    
+
 //  Association avec notre Context pour effectuer l'authentification 
 }).AddEntityFrameworkStores<DataContext>();
 

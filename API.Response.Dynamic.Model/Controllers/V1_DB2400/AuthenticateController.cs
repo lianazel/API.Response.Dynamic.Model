@@ -80,6 +80,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                     userDto.Token = this.GenerateJwtToken(user);
                     // > On renvoie le Dto avec le Token calculé <
                     result = this.Ok(userDto);
+                                      
                 }
 
                 // > Le Anaomalie détectée à la génératioon du Token  <
@@ -152,7 +153,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                         //   ...de claculer un nouveau Token < 
                         Token = GenerateJwtToken(user),
                     });
-
+                                       
                 }
 
             }

@@ -9,7 +9,8 @@ namespace API.Response.Dynamic.Model.SecurityMethods
     {
         #region properties 
         // > Déclare clé pour la construction du Token <
-        private static string MyKeyJwt { get; set; }
+        // private static string MyKeyJwt { get; set; }
+        private static string MyKeyJwt;
 
         // > Cré une variable "args" de type tableau de string nullable (?) <
         // ( pour " var builder = WebApplication.CreateBuilder(args) )
@@ -30,22 +31,25 @@ namespace API.Response.Dynamic.Model.SecurityMethods
             // > 2/ Création d'un objet "Configuration" à partir du...
             //      ..."configurationBuilder" <
             IConfiguration configuration = configurationBuilder.Build();
-
-            // > 3/ Récupération de la clé d'authentification <
-            //     ( On récupère la clé depuis "appsettings.json" )
-            MyKeyJwt = configuration["Jwt:key"];
-
-            // > 4/ On déclare une variable "builder" de type...
+                        
+           
+            // > 3/ On déclare une variable "builder" de type...
             //      ... "WebAplicationBuilder" <
             var builder = WebApplication.CreateBuilder(args);
 
-
-            // > 5 Si le paramètre transmis est non nul, alors on récupère son contenu <
+            // > 4 Si le paramètre transmis est non nul, alors on récupère son contenu <
             if ( _builder is not null)
             {
+                // > On Parse "_builder" avec la classe "WebApplicationBuilder" <
                 builder = (WebApplicationBuilder) _builder; ;
             }
 
+            // > 5/ Récupération de la clé d'authentification <
+            //     ( On récupère la clé depuis "appsettings.json" )
+            MyKeyJwt = string.Empty;    
+            MyKeyJwt = builder.Configuration.GetSection("Jwt")["key"];
+
+            
             // =-=-=-=-=-=-=-=-=-=-
             // =-=-=- DEBUT Phase Validation du <Json Web Token> =-=-=-=
             // =-=-=-=-=-=-=-=-=-=-
