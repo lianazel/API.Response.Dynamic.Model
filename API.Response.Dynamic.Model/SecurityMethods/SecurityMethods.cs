@@ -23,7 +23,7 @@ namespace API.Response.Dynamic.Model.SecurityMethods
         /// </summary>
         /// <param name="_builder"></param>
         /// <returns></returns>
-        public static object AddCustomAuthentication( object _builder)
+        public static object  AddCustomAuthentication( object _builder)
         {
             // > 1/ Création d'un "configurationBuilder" <
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();

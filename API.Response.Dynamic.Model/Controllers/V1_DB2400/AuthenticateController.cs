@@ -79,15 +79,20 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                     // > On récupère le Token calculé par la méthode "GenerateJwtToken" <
                     userDto.Token = this.GenerateJwtToken(user);
                     // > On renvoie le Dto avec le Token calculé <
-                    result = this.Ok(userDto);
-                                      
+                    result = this.Ok(userDto);                                      
                 }
 
                 // > Le Anaomalie détectée à la génératioon du Token  <
                 catch (Exception ex)
                 {
+                    StringBuilder sb = new StringBuilder();
+
+                    // > Identificatioon du code message <
+                    sb.Append("JWT_ERR_REGISTER_A1 - ");
+                    
                     // > Récupération du message d'erreur <
-                    userDto.ErrorMsge = ex.Message;
+                    sb.Append(ex.Message);
+                    userDto.ErrorMsge = sb.ToString();
 
                     // > On renvoie le Dto avec le Message d'erreur <
                     result = this.BadRequest(userDto);
@@ -97,6 +102,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                 { }
             }
 
+
             // > Quelque chose s'est mal passé <
             //   - Mot de passe incorrect ( ne respecte PAS les règles prédéfinies ),
             //                  ou
@@ -104,14 +110,16 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
             else
             { 
             
-                StringBuilder sb = new StringBuilder(); 
+                StringBuilder sb = new StringBuilder();
+
+                // > Identificatioon du code message <
+                sb.Append("JWT_ERR_REGISTER_A2 - ");
 
                 foreach ( char item in success.Errors.ToString())
                 {
                     sb.Append(item);
 
                 }
-
                 userDto.ErrorMsge = sb.ToString();  
                 result = this.BadRequest(userDto);
             }  
@@ -154,6 +162,25 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                         Token = GenerateJwtToken(user),
                     });
                                        
+                }
+
+                else
+                {
+
+                    StringBuilder sb = new StringBuilder();
+
+                    // > Identificatioon du code message <
+                    sb.Append("JWT_ERR_LOGIN_A1 - Erreur Détectée");
+                    result = this.BadRequest(new AuthenticateUserDto()
+                    {
+                        Login = user.Email,
+                        Name = user.UserName,
+                        // > Appelle la méthode "GenerateJwtToke" qui se charge...
+                        //   ...de claculer un nouveau Token < 
+                        Token = null,
+                        ErrorMsge = sb.ToString()
+                    });
+
                 }
 
             }

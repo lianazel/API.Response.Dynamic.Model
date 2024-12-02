@@ -27,8 +27,8 @@ namespace API.Response.Dynamic.Model.wwwroot.Swagger
                 Title = "Web API",
                 Version = description.ApiVersion.ToString(),
                 Description = "Building dynamic data models for JSON response",
-                Contact = new OpenApiContact { Name = "JC CHERID", Email = "farenheit902job@gmail.com" },
-                License = new OpenApiLicense { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
+                Contact = new OpenApiContact { Name = "Jean-Christophe CHERID", Email = "farenheit902job@gmail.com" },
+                License = new OpenApiLicense { Name = "OpenSourceProject", Url = new Uri("https://opensource.org/licenses/MIT") }
             };
 
             if (description.IsDeprecated)
