@@ -142,8 +142,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
             // > Rappel : lorsque notre méthode "Login" est en "async",...
             //   ...il faut faire un "await" <
-            var user = await this._userManager.FindByEmailAsync(DtoUser.Login);
-                        
+            var user = await this._userManager.FindByEmailAsync(DtoUser.Login);                        
             if (user != null)
             {
                 // > On va vérifier le password <
@@ -160,17 +159,13 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                         // > Appelle la méthode "GenerateJwtToke" qui se charge...
                         //   ...de claculer un nouveau Token < 
                         Token = GenerateJwtToken(user),
-                    });
-                                       
+                    });                                       
                 }
-
                 else
                 {
-
                     StringBuilder sb = new StringBuilder();
-
                     // > Identificatioon du code message <
-                    sb.Append("JWT_ERR_LOGIN_A1 - Erreur Détectée");
+                    sb.Append("JWT_ERR_LOGIN_A1 - Adresse Mail ou mot de passe invalide");
                     result = this.BadRequest(new AuthenticateUserDto()
                     {
                         Login = user.Email,
@@ -180,9 +175,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                         Token = null,
                         ErrorMsge = sb.ToString()
                     });
-
                 }
-
             }
             // > On retourne le résultat <
             return result;  

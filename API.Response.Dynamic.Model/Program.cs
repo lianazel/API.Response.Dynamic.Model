@@ -50,7 +50,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 
 // =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-// #####                            **** Entity Framework Core .Net6  ****                     #####
+// #####                            **** Entity Framework Core .Net8  ****                     #####
 // ##### On met en place le lien entre l'interface et la classe qui respecte ce contrat ici.   #####
 // ##### "builder.Services.AddScoped<IParamRepository, DefaultParamRepository>();"             #####
 // #####                                                                                       #####
@@ -122,6 +122,10 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
+// Authentication Swagger - Error Message "TypeError: Failed to execute 'fetch' on 'Window': Invalid name"
+// voir https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/704
+
+
 // > Récupération de la documentation installée au niveau du contrôleur <
 builder.Services.AddSwaggerGen(options =>
 {
@@ -133,12 +137,13 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(xmlPath);
 
     // > Ajout Authentification JWT 1/2 <
-    options.AddSecurityDefinition(" Bearer ", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer ", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Description = "En-tête d’autorisation JWT utilisant le schéma Bearer.",
-        Name = " Authorization ",
+        Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey
+
     });
 
     // > Ajout Authentification JWT 2/2 <
@@ -150,9 +155,9 @@ builder.Services.AddSwaggerGen(options =>
                 Reference = new OpenApiReference
                 {
                     Type = ReferenceType.SecurityScheme,
-                    Id = " Bearer "
+                    Id = "Bearer "
                 },
-                Scheme = " oauth2 " , Name = " Bearer " ,
+                Scheme = "oauth2" , Name = "Bearer " ,
 
                 In = ParameterLocation.Header,
             },
