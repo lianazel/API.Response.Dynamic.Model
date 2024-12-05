@@ -7,10 +7,7 @@ using Asp.Versioning;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using API.Response.Dynamic.Model.wwwroot.Swagger;
-using System.Configuration;
-using IoC.Features;
 using System.Reflection;
-using System.Net;
 using Microsoft.OpenApi.Models;
 using API.Response.Dynamic.Model.SecurityMethods;
 using Microsoft.AspNetCore.Identity;
@@ -115,16 +112,10 @@ builder.Services
 
 // > Configuration du builder avec les classes "SwaggerGenOptions" et "ConfigureSwaggerOptions" <
 builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
-builder.Services.AddSwaggerGen(options =>
-{
-    // Ajouter un filtre d'opération personnalisé qui définit les valeurs par défaut
-    options.OperationFilter<SwaggerDefaultValues>();
-});
 
 
 // Authentication Swagger - Error Message "TypeError: Failed to execute 'fetch' on 'Window': Invalid name"
 // voir https://github.com/domaindrivendev/Swashbuckle.AspNetCore/issues/704
-
 
 // > Récupération de la documentation installée au niveau du contrôleur <
 builder.Services.AddSwaggerGen(options =>

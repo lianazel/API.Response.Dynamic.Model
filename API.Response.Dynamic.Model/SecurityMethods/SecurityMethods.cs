@@ -1,4 +1,5 @@
 ﻿// > Authentication JWT <
+using API.Response.Dynamic.Model.Infrastructures.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -45,11 +46,19 @@ namespace API.Response.Dynamic.Model.SecurityMethods
             }
 
             // > 5/ Récupération de la clé d'authentification <
-            //     ( On récupère la clé depuis "appsettings.json" )
-            MyKeyJwt = string.Empty;    
-            MyKeyJwt = builder.Configuration.GetSection("Jwt")["key"];
+            //   ( On récupère la clé depuis "appsettings.json" )
+            MyKeyJwt = string.Empty;
+            //   [ Ancienne méthode pour récupérer la clé de calcul du Token ]
+            // MyKeyJwt = builder.Configuration.GetSection("Jwt")["key"];
+
+            //   [ Nouvelle méthode pour récupérer la clé de calcul du Token ] 
+            SecurityOptions ElemeSecurity = new SecurityOptions();
+            builder.Configuration.GetSection("Jwt").Bind(ElemeSecurity);
+
+            MyKeyJwt= ElemeSecurity.key;
 
             
+
             // =-=-=-=-=-=-=-=-=-=-
             // =-=-=- DEBUT Phase Validation du <Json Web Token> =-=-=-=
             // =-=-=-=-=-=-=-=-=-=-

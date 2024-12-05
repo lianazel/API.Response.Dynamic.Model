@@ -39,14 +39,10 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
         // > On déclare un membre pour récupérer l'envireonnement d'exécution <
         //   ( ici on en aura pas besoin, mais c'est pour l'exemple )
-        private readonly IWebHostEnvironment _webHostEnvironment = null;
-
-       
+        private readonly IWebHostEnvironment _webHostEnvironment = null;              
         #endregion
 
-
         #region Methods 
-
         // > Constructeur <
         public DynamicResponseController(IParamRepository repository, IWebHostEnvironment webHost)
         {
@@ -57,7 +53,6 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
             _webHostEnvironment = webHost;
 
         }
-
 
         // - - - - - - - - - - - - - - - 
         //              *** V1 ***
