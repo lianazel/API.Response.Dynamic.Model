@@ -1,4 +1,5 @@
 ﻿using API.Response.Dynamic.Model.Applications.DTOs;
+using API.Response.Dynamic.Model.SecurityMethods;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -64,8 +65,11 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
             {
                 try
                 {
-                    // > On récupère le Token calculé par la méthode "GenerateJwtToken" <
-                    userDto.Token = this.GenerateJwtToken(user);
+                    // > On instancie la classe "JwtTokenGeneration" <
+                    var GenerateToken = new JwtTokenGeneration(user);
+
+                    // > On récupère le Token calculé par la méthode "RunTwtGeneration" <
+                    userDto.Token = GenerateToken.RunTwtGeneration();
                     // > On renvoie le Dto avec le Token calculé <
                     result = this.Ok(userDto);                                      
                 }
@@ -142,15 +146,18 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                 if (verif)
                 {
+                    // > On instancie la classe "JwtTokenGeneration" <
+                    var GenerateToken = new JwtTokenGeneration(user);
+
                     // > On charge le DTO avec la calcul du Token renvoyé par la méthode...
                     //   ..."GenerateJwtToken" <
                     result = this.Ok(new AuthenticateUserDto()
                     {
                         Login  = user.Email,
                         Name   = user.UserName,
-                        // > Appelle la méthode "GenerateJwtToke" qui se charge...
-                        //   ...de claculer un nouveau Token < 
-                        Token = GenerateJwtToken(user),
+
+                        // > On récupère le Token calculé par la méthode "RunTwtGeneration" <
+                        Token = GenerateToken.RunTwtGeneration()
                     });                                       
                 }
                 else
