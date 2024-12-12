@@ -3,13 +3,13 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Response.Dynamic.Model.Controllers.V3_SQLSERVER
+namespace API.Response.Dynamic.Model.Controllers.V2_SQLSERVER
 {
 
     [ApiController]
-    [ApiVersion("3.0")]
+    [ApiVersion("2.0")]
     [Route("api/v{version:apiVersion}/[controller]")]
-    public class DynamicResponse3Controller : ControllerBase
+    public class DynamicResponse2Controller : ControllerBase
     {
         #region fields
         // > Pour récupérer l'injection de dépandance <
@@ -25,7 +25,7 @@ namespace API.Response.Dynamic.Model.Controllers.V3_SQLSERVER
         #region Methods 
 
         // > Constructeur <
-        public DynamicResponse3Controller(IParamRepository repository, IWebHostEnvironment webHost)
+        public DynamicResponse2Controller(IParamRepository repository, IWebHostEnvironment webHost)
         {
             // > Récupération du repository < 
             _repository = repository;

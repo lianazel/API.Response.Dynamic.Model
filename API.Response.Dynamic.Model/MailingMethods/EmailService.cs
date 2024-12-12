@@ -40,14 +40,17 @@ namespace API.Response.Dynamic.Model.MailingMethods
             _emailFrom = emailFrom;
             _emailTo = emailTo;
         }
+
+        public EmailService()
+        { }
         #endregion
 
-        public void send(string to, string subject, string html, string from = null)
+        public void  send(string to, string subject, string html, string from = null)
         {
             // > Create Message <
             var email = new MimeMessage();
             email.From.Add(MailboxAddress.Parse(from));
-            email.From.Add(MailboxAddress.Parse(to));
+            email.To.Add(MailboxAddress.Parse(to));
 
             // > Sujet du mail <
             email.Subject = subject;
