@@ -1,7 +1,11 @@
 ﻿// > Authentication JWT <
 using API.Response.Dynamic.Model.Infrastructures.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 
 namespace API.Response.Dynamic.Model.SecurityMethods
@@ -119,6 +123,8 @@ namespace API.Response.Dynamic.Model.SecurityMethods
             return builder;
 
         }
+
+
     }
 }
 
