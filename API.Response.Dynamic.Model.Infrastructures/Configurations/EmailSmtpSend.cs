@@ -18,11 +18,14 @@ namespace API.Response.Dynamic.Model.Infrastructures.Configurations
         // > Exemple : 587 <
         public int smtpPort { get; set; }   
 
-        // Exemple : "JCC" 
-        public string smtpName { get; set; }
+        // > Exemple : "JCC" <
+        public string? smtpName { get; set; }
 
-        string smtpAdressMail { get; set; } 
-        string smtppassword { get; set; }
+        // > Exemple : "SecureSocketOptions.StartTls" <
+        public string? smtpSecurite { get; set; }    
+
+        public  string? smtpAdressMail { get; set; } 
+        public  string? smtppassword { get; set; }
 
         public bool smtpDisconnect { get; set; }
 

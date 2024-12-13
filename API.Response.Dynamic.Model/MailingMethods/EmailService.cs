@@ -1,4 +1,5 @@
 ﻿using API.Response.Dynamic.Model.Framework.Repositories;
+using API.Response.Dynamic.Model.Infrastructures.Configurations;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -15,10 +16,16 @@ namespace API.Response.Dynamic.Model.MailingMethods
     // https://mailtrap.io/blog/asp-net-core-send-email/
     // https://ironpdf.com/fr/blog/net-help/mailkit-csharp-guide/
 
+    // > Je me suis crée un compte "Ethéré" pour les tests <
+    // https://ethereal.email/create
 
 
 
 
+
+    /// <summary>
+    /// Rappel : Travail avec le NuGet "MailKit" 
+    /// </summary>
     public class EmailService : IEmailService
     {
         #region properties
@@ -30,6 +37,12 @@ namespace API.Response.Dynamic.Model.MailingMethods
 
         // > Destinataire w
         private readonly string _emailTo;
+
+        // > Cré une variable "args" de type tableau de string nullable (?) <
+        // ( pour " var builder = WebApplication.CreateBuilder(args) )
+        // ( Remarque : on peut l'appeler autrement que "args" si on veut )
+        private static string[]? args { get; set; }
+
         #endregion
 
         #region constructor
@@ -44,12 +57,53 @@ namespace API.Response.Dynamic.Model.MailingMethods
         public EmailService()
         { }
         #endregion
-
+        /// <summary>
+        /// Method "Send" ==> send mail 
+        /// </summary>
+        /// <param name="to">Destinataire</param>
+        /// <param name="subject">Objet du mail</param>
+        /// <param name="html"></param>
+        /// <param name="from">Emetteur</param>
         public void  send(string to, string subject, string html, string from = null)
         {
+            // > 1/ Création d'un "configurationBuilder" <
+            ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+
+            // > 2/ Création d'un objet "Configuration" à partir du...
+            //      ..."configurationBuilder" <
+            IConfiguration configuration = configurationBuilder.Build();
+
+
+            // > 3/ On déclare une variable "builder" de type...
+            //      ... "WebAplicationBuilder" <
+            var builder = WebApplication.CreateBuilder(args);
+
+
+            // - - - - - - - - - - -
+            // > Récupération des paramètres depuis l'appSettings <
+            // - - - - - - - - - - -
+            //   [ Nouvelle méthode pour récupérer les infos par Binding ] 
+            EmailSmtpSend SmtpSend = new EmailSmtpSend();
+
+            // > On récupère les paramètres d'une boite Mail Fictive pour les tests <
+            //   ( on ne peiut PAS utiliser les services Gmail : leur sécurité....
+            //     ...bloque les envoie de mails ==> voir  https://support.google.com/mail/?p=BadCredentials )
+            builder.Configuration.GetSection("SmtpSettingsEthere").Bind(SmtpSend);
+
+            // - - - - - - - - - - - -
             // > Create Message <
+            // - - - - - - - - - - - -
             var email = new MimeMessage();
-            email.From.Add(MailboxAddress.Parse(from));
+
+            if (from != null)
+            {
+                email.From.Add(MailboxAddress.Parse(from));
+            }
+            else
+            {
+                email.From.Add(MailboxAddress.Parse(SmtpSend.smtpAdressMail));
+            }
+
             email.To.Add(MailboxAddress.Parse(to));
 
             // > Sujet du mail <
@@ -58,9 +112,15 @@ namespace API.Response.Dynamic.Model.MailingMethods
             // > Corps du mail <
             email.Body = new TextPart(TextFormat.Html) { Text = html };
 
-
+            // - - - - - - - - - - - -
+            // > Send Message <
+            // - - - - - - - - - - - -
             using var smtp = new SmtpClient();
-
+            smtp.Connect(SmtpSend.smptHost, SmtpSend.smtpPort, SecureSocketOptions.StartTls);
+            smtp.Authenticate(SmtpSend.smtpAdressMail, SmtpSend.smtppassword);
+            smtp.Send(email);
+            smtp.Disconnect(SmtpSend.smtpDisconnect);
+            
         }
     }
 }

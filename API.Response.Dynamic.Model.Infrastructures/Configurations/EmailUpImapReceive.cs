@@ -12,12 +12,15 @@ namespace API.Response.Dynamic.Model.Infrastructures.Configurations
     public class EmailUpImapReceive
     { 
         // > Exemple : "imap.gmail.com" <    
-        public string Imap {  get; set; }
-        // > Exemple : 993
+        public string? Imap {  get; set; }
+       
+        // > Exemple : 993 <
         public int ImapPort { get; set; }
 
-        public string ImapMailAdress { get; set; }
-        public string ImapMailPassword { get; set; }
+        // > Exemple : "TLS" <
+        public string? ImapSecurite { get; set; }    
+        public string? ImapMailAdress { get; set; }
+        public string? ImapMailPassword { get; set; }
 
         public bool ImapConnect { get; set; }
 

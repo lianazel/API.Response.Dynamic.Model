@@ -87,10 +87,14 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                     email.send(user.Email,
                    "Verifier votre Email", $"Click sur le lien pour vérifier le mail:{confirmationlink}");
 
-                    return Ok("Enregistrement OK. Contrôler votre mail pour valider votre compte")
+                    return Ok("Enregistrement OK. Contrôler votre mail pour valider votre compte");
                 }
 
-                // > Le Anaomalie détectée à la génératioon du Token  <
+                // > Le Anaomalie détectée à la phase d'inscription  <
+                //   -> les possibilités d'erreurs sont :
+                //      1/ adresse mail déjà existante,
+                //      2/ mot de passe déjà utilisé,
+                //      3/ mot de passe non conforme...
                 catch (Exception ex)
                 {
                     StringBuilder sb = new StringBuilder();
@@ -100,9 +104,9 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                     // > Récupération du message d'erreur <
                     sb.Append(ex.Message);
-                    // userDto.ErrorMsge = sb.ToString();
+                    userDto.ErrorMsge = sb.ToString();
                     // ( Utilisation de "nameof()" => plus rapide que "sb.ToString()" )
-                    userDto.ErrorMsge = nameof(sb);
+                    // userDto.ErrorMsge = nameof(sb);
 
                     // > On renvoie le Dto avec le Message d'erreur <
                     result = this.BadRequest(userDto);
@@ -131,8 +135,8 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                 }
                 // > Utilisation de "nameof()" => plus rapide que "sb.ToString()" <
-                // userDto.ErrorMsge = sb.ToString();  
-                userDto.ErrorMsge = nameof(sb);
+                userDto.ErrorMsge = sb.ToString();  
+                //userDto.ErrorMsge = nameof(sb);
                 result = this.BadRequest(userDto);
             }
 
