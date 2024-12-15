@@ -8,7 +8,7 @@ namespace API.Response.Dynamic.Model.Framework.Repositories
 {
     public interface IEmailService
     {
-        void send(string to, string subject, string html, string from = null);
+        Task<Boolean> Send(string to, string subject, string html, string from = null);
 
     }
 }

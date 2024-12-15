@@ -2,9 +2,6 @@
 using API.Response.Dynamic.Model.Infrastructures.Configurations;
 using MailKit.Net.Smtp;
 using MailKit.Security;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.Extensions.Options;
-
 using MimeKit;
 using MimeKit.Text;
 
@@ -20,13 +17,10 @@ namespace API.Response.Dynamic.Model.MailingMethods
     // https://ethereal.email/create
 
 
-
-
-
     /// <summary>
     /// Rappel : Travail avec le NuGet "MailKit" 
     /// </summary>
-    public class EmailService : IEmailService
+    public  class EmailService : IEmailService
     {
         #region properties
         // > Message a envoyer <
@@ -64,8 +58,11 @@ namespace API.Response.Dynamic.Model.MailingMethods
         /// <param name="subject">Objet du mail</param>
         /// <param name="html"></param>
         /// <param name="from">Emetteur</param>
-        public void  send(string to, string subject, string html, string from = null)
+        public Task<Boolean> Send(string to, string subject, string html, string from = null)
         {
+            // > Par défaut, optimiste  <
+            Boolean result = false;
+
             // > 1/ Création d'un "configurationBuilder" <
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
 
@@ -86,9 +83,9 @@ namespace API.Response.Dynamic.Model.MailingMethods
             EmailSmtpSend SmtpSend = new EmailSmtpSend();
 
             // > On récupère les paramètres d'une boite Mail Fictive pour les tests <
-            //   ( on ne peiut PAS utiliser les services Gmail : leur sécurité....
-            //     ...bloque les envoie de mails ==> voir  https://support.google.com/mail/?p=BadCredentials )
-            builder.Configuration.GetSection("SmtpSettingsEthere").Bind(SmtpSend);
+            //  ( Problème : les systèmes de messagerie (Gmail, m.com,etc...) bloque les connections...
+            //    ...faites à partir de code ) ==> du coup, difficile à tester 
+            builder.Configuration.GetSection("SmtpSettings").Bind(SmtpSend);
 
             // - - - - - - - - - - - -
             // > Create Message <
@@ -116,11 +113,20 @@ namespace API.Response.Dynamic.Model.MailingMethods
             // > Send Message <
             // - - - - - - - - - - - -
             using var smtp = new SmtpClient();
-            smtp.Connect(SmtpSend.smptHost, SmtpSend.smtpPort, SecureSocketOptions.StartTls);
-            smtp.Authenticate(SmtpSend.smtpAdressMail, SmtpSend.smtppassword);
-            smtp.Send(email);
-            smtp.Disconnect(SmtpSend.smtpDisconnect);
-            
+            try
+            {
+                smtp.Connect(SmtpSend.smptHost, SmtpSend.smtpPort, SecureSocketOptions.StartTls);
+                smtp.Authenticate(SmtpSend.smtpAdressMail, SmtpSend.smtppassword);
+                smtp.Send(email);
+                smtp.Disconnect(SmtpSend.smtpDisconnect);
+            }
+
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return Task.FromResult(result); 
         }
     }
 }

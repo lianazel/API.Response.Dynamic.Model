@@ -2,12 +2,8 @@
 using API.Response.Dynamic.Model.MailingMethods;
 using API.Response.Dynamic.Model.SecurityMethods;
 using Asp.Versioning;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using System.Text;
 
 namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
@@ -35,18 +31,14 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
         {
             // > Chargement du Paramètre <
             this._userManager = userManager;
-
-
         }
         #endregion
 
         #region methods
-
         [Route("Register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] AuthenticateUserDto userDto)
         {
-
             // > Par défaut, pessimiste <
             IActionResult result = this.BadRequest();
 
@@ -67,7 +59,6 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
             {
                 try
                 {
-
                     // > On instancie la classe "JwtTokenGeneration" <
                     var GenerateToken = new JwtTokenGeneration(user);
 
@@ -84,8 +75,8 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                     //  > Send mail <
                     var email = new EmailService();
-                    email.send(user.Email,
-                   "Verifier votre Email", $"Click sur le lien pour vérifier le mail:{confirmationlink}");
+                    await email.Send(user.Email,"Verifier votre Email",
+                     $"Click sur le lien pour vérifier le mail:{confirmationlink}");
 
                     return Ok("Enregistrement OK. Contrôler votre mail pour valider votre compte");
                 }
@@ -95,6 +86,9 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                 //      1/ adresse mail déjà existante,
                 //      2/ mot de passe déjà utilisé,
                 //      3/ mot de passe non conforme...
+                //      4/ Echec authentification...
+                //        ... du provider (méthode "Send" de la classe "EmailService").
+
                 catch (Exception ex)
                 {
                     StringBuilder sb = new StringBuilder();
@@ -105,9 +99,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                     // > Récupération du message d'erreur <
                     sb.Append(ex.Message);
                     userDto.ErrorMsge = sb.ToString();
-                    // ( Utilisation de "nameof()" => plus rapide que "sb.ToString()" )
-                    // userDto.ErrorMsge = nameof(sb);
-
+                    
                     // > On renvoie le Dto avec le Message d'erreur <
                     result = this.BadRequest(userDto);
                 }
@@ -116,14 +108,12 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                 { }
             }
 
-
             // > Quelque chose s'est mal passé <
             //   - Mot de passe incorrect ( ne respecte PAS les règles prédéfinies ),
             //                  ou
             //   - Un utilisateur avec ce login existe déjà...
             else
             {
-
                 StringBuilder sb = new StringBuilder();
 
                 // > Identificatioon du code message <
@@ -132,17 +122,13 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                 foreach (char item in success.Errors.ToString())
                 {
                     sb.Append(item);
-
                 }
-                // > Utilisation de "nameof()" => plus rapide que "sb.ToString()" <
-                userDto.ErrorMsge = sb.ToString();  
-                //userDto.ErrorMsge = nameof(sb);
+                userDto.ErrorMsge = sb.ToString();                  
                 result = this.BadRequest(userDto);
             }
 
             return result;
         }
-
 
 
         [Route("emailverification")]
@@ -154,7 +140,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
             var user = await _userManager.FindByIdAsync(userID);
             if (user == null)
             {
-                return BadRequest("Invalid User ID");
+                return BadRequest("JWT_EMAILCHEK_A1 - Invalid User ID");
             }
 
             // > Tentative de confirmation de l'email de l'utilisateur < 
