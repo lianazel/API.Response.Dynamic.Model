@@ -14,8 +14,9 @@
         // > Token calculé et retourné <
         public string Token   { get; set; }   
 
-        // Contient message d'erreur eventuel <
-        public string ErrorMsge { get; set; }
+        // Contient message informatif <
+        //   ( Erreur ou autre )
+        public string InfoMsge { get; set; }
 
         #endregion
 

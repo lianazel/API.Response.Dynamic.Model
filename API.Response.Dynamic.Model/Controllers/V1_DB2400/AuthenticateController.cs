@@ -83,13 +83,27 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                         ResMsge = await email.Send(user.Email, "Verifier votre Email",
                          $"Click sur le lien pour vérifier le mail:{confirmationlink}");
 
-                        return Ok("Enregistrement OK. Contrôler votre mail pour valider votre compte");
+                        // > Une anomalie a été détecté lors de l'envoie du mail <
+                        //   ( on met à jour le DTO ) 
+                        if (ResMsge != string.Empty)
+                        {
+                            userDto.InfoMsge = ResMsge;
+                            result = this.BadRequest(userDto);
+
+                        }
+
+                        else
+                        {
+                            userDto.InfoMsge = "Enregistrement OK. Contrôler votre mail pour valider votre compte";
+                            result = this.Ok(userDto); 
+                        }
                     }
                     // > Quelque chose s'est mal passé => on renvoie...
                     //   ...le message d'erreur renvoyé par la méthode "Send" <
                     catch
                     {
-                        userDto.ErrorMsge = ResMsge;
+                        userDto.InfoMsge = ResMsge;
+                        result = this.BadRequest(userDto);
 
                     }
                 }
@@ -106,7 +120,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                 {
                     // > Ne charge le message d'erreur que si la...
                     //   ...propriété  "ErrorMsge" du Dto est vide <
-                    if (userDto.ErrorMsge == string.Empty)
+                    if (userDto.InfoMsge == string.Empty)
                     {
                         StringBuilder sb = new StringBuilder();
 
@@ -115,9 +129,9 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                         // > Récupération du message d'erreur <
                         sb.Append(ex.Message);
-                        userDto.ErrorMsge = sb.ToString();
+                        userDto.InfoMsge = sb.ToString();
                     }
-                    
+
                     // > On renvoie le Dto avec le Message d'erreur <
                     result = this.BadRequest(userDto);
                 }
@@ -141,7 +155,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                 {
                     sb.Append(item);
                 }
-                userDto.ErrorMsge = sb.ToString();                  
+                userDto.InfoMsge = sb.ToString();
                 result = this.BadRequest(userDto);
             }
 
@@ -163,7 +177,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
             // > Tentative de confirmation de l'email de l'utilisateur < 
             var result = await _userManager.ConfirmEmailAsync(user, Token);
-            
+
             // > Si le membre booléen "Succeeded" est à vrai, on renvoie un message de succés <
             //  ( Sinon, on renvoie une BadRequest avec le message qui va bien )
             return result.Succeeded ? Ok("Email confirmé avec succés !") :
@@ -223,7 +237,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                         // > Utilisation de "nameof()" => plus rapide que "sb.ToString()" <
                         // ErrorMsge = sb.ToString()
-                        ErrorMsge = nameof(sb)
+                        InfoMsge = nameof(sb)
                     });
                 }
             }
