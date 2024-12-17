@@ -55,11 +55,12 @@ namespace API.Response.Dynamic.Model.MailingMethods
         /// <summary>
         /// Method "Send" ==> send mail 
         /// </summary>
+        /// <param name="AppSettingsSection">Destinataire</param>
         /// <param name="to">Destinataire</param>
         /// <param name="subject">Objet du mail</param>
         /// <param name="html"></param>
         /// <param name="from">Emetteur</param>
-        public Task<string> Send(string to, string subject, string html, string from = null)
+        public Task<string> Send(string AppSettingsSection,string to, string subject, string html, string from = null)
         {
             // > Par défaut, optimiste  <
             //   ( Pas de message )
@@ -87,7 +88,7 @@ namespace API.Response.Dynamic.Model.MailingMethods
             // > On récupère les paramètres d'une boite Mail Fictive pour les tests <
             //  ( Problème : les systèmes de messagerie (Gmail, m.com,etc...) bloque les connections...
             //    ...faites à partir de code ) ==> du coup, difficile à tester 
-            builder.Configuration.GetSection("SmtpSettings").Bind(SmtpSend);
+            builder.Configuration.GetSection(AppSettingsSection).Bind(SmtpSend);
 
             // - - - - - - - - - - - -
             // > Create Message <

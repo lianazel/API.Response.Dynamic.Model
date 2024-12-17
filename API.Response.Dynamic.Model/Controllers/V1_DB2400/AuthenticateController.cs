@@ -80,7 +80,7 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                     var email = new EmailService();
                     try
                     {
-                        ResMsge = await email.Send(user.Email, "Verifier votre Email",
+                        ResMsge = await email.Send("SmtpSettingsEthere",user.Email, "Verifier votre Email",
                          $"Click sur le lien pour vérifier le mail:{confirmationlink}");
 
                         // > Une anomalie a été détecté lors de l'envoie du mail <
