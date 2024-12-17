@@ -1,4 +1,4 @@
-﻿using API.Response.Dynamic.Model.Framework.Repositories;
+﻿using API.Response.Dynamic.Model.Framework.Interfaces;
 using API.Response.Dynamic.Model.Infrastructures.Configurations;
 using MailKit.Net.Smtp;
 using MailKit.Security;

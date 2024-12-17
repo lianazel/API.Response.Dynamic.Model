@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace API.Response.Dynamic.Model.Framework.Repositories
+namespace API.Response.Dynamic.Model.Framework.Interfaces
 {
     public interface IEmailService
     {
