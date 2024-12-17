@@ -74,11 +74,24 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
                         new { user.Id, userDto.Token }, Request.Scheme);
 
                     //  > Send mail <
+                    //  ( Déclare un string pour intercepter un...
+                    //    eventuel message d'erreur )
+                    string ResMsge = string.Empty;
                     var email = new EmailService();
-                    await email.Send(user.Email,"Verifier votre Email",
-                     $"Click sur le lien pour vérifier le mail:{confirmationlink}");
+                    try
+                    {
+                        ResMsge = await email.Send(user.Email, "Verifier votre Email",
+                         $"Click sur le lien pour vérifier le mail:{confirmationlink}");
 
-                    return Ok("Enregistrement OK. Contrôler votre mail pour valider votre compte");
+                        return Ok("Enregistrement OK. Contrôler votre mail pour valider votre compte");
+                    }
+                    // > Quelque chose s'est mal passé => on renvoie...
+                    //   ...le message d'erreur renvoyé par la méthode "Send" <
+                    catch
+                    {
+                        userDto.ErrorMsge = ResMsge;
+
+                    }
                 }
 
                 // > Le Anaomalie détectée à la phase d'inscription  <
@@ -91,14 +104,19 @@ namespace API.Response.Dynamic.Model.Controllers.V1_DB2400
 
                 catch (Exception ex)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    // > Ne charge le message d'erreur que si la...
+                    //   ...propriété  "ErrorMsge" du Dto est vide <
+                    if (userDto.ErrorMsge == string.Empty)
+                    {
+                        StringBuilder sb = new StringBuilder();
 
-                    // > Identificatioon du code message <
-                    sb.Append("JWT_ERR_REGISTER_A1 - ");
+                        // > Identificatioon du code message <
+                        sb.Append("JWT_ERR_REGISTER_A1 - ");
 
-                    // > Récupération du message d'erreur <
-                    sb.Append(ex.Message);
-                    userDto.ErrorMsge = sb.ToString();
+                        // > Récupération du message d'erreur <
+                        sb.Append(ex.Message);
+                        userDto.ErrorMsge = sb.ToString();
+                    }
                     
                     // > On renvoie le Dto avec le Message d'erreur <
                     result = this.BadRequest(userDto);

@@ -4,6 +4,7 @@ using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using MimeKit.Text;
+using System.Text;
 
 namespace API.Response.Dynamic.Model.MailingMethods
 
@@ -58,10 +59,11 @@ namespace API.Response.Dynamic.Model.MailingMethods
         /// <param name="subject">Objet du mail</param>
         /// <param name="html"></param>
         /// <param name="from">Emetteur</param>
-        public Task<Boolean> Send(string to, string subject, string html, string from = null)
+        public Task<string> Send(string to, string subject, string html, string from = null)
         {
             // > Par défaut, optimiste  <
-            Boolean result = false;
+            //   ( Pas de message )
+            string ResMsge = string.Empty ;
 
             // > 1/ Création d'un "configurationBuilder" <
             ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
@@ -121,12 +123,18 @@ namespace API.Response.Dynamic.Model.MailingMethods
                 smtp.Disconnect(SmtpSend.smtpDisconnect);
             }
 
+            // > Anomalie détectée => Interception message <
             catch (Exception ex)
             {
-                result = false;
+                StringBuilder sb = new StringBuilder();
+                sb.Append("JWT_ERR_SENDMAIL_A1 - ");
+                sb.Append(ex.Message);
+                ResMsge = sb.ToString();
             }
 
-            return Task.FromResult(result); 
+            // > On renvoie le message resultat <
+            //   ( si vide => tout est OK )
+            return Task.FromResult(ResMsge); 
         }
     }
 }
